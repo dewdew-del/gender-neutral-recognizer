@@ -38,7 +38,7 @@ test('askGroq turns failures into friendly errors', async () => {
   const bad = (status) => async () => ({ ok: false, status, json: async () => ({}) });
   await assert.rejects(askGroq({ key: 'x', messages: [], fetchImpl: bad(401) }), /key was rejected/i);
   await assert.rejects(askGroq({ key: 'x', messages: [], fetchImpl: bad(429) }), /too many requests/i);
-  await assert.rejects(askGroq({ key: 'x', messages: [], fetchImpl: bad(500) }), /could not answer/i);
+  await assert.rejects(askGroq({ key: 'x', messages: [], fetchImpl: bad(500) }), (e) => /could not answer/i.test(e.message) && e.status === 500);
   await assert.rejects(askGroq({ key: 'x', messages: [], fetchImpl: async () => { throw new Error('net'); } }), /could not reach/i);
   await assert.rejects(askGroq({ key: '', messages: [], fetchImpl: bad(200) }), /api key/i);
 });
@@ -82,4 +82,17 @@ test('serverless handler uses the server-side key and rejects bad calls', async 
   assert.strictEqual(seen.headers.Authorization, 'Bearer gsk_server');
   res = mkRes(); await handler({ method: 'POST', headers: {}, body: { question: '' } }, res); assert.strictEqual(res.code, 400);
   delete process.env.GROQ_API_KEY;
+});
+
+test('askGroq falls back to the next model when one is unavailable (404)', async () => {
+  const tried = [];
+  const fetchImpl = async (url, opts) => {
+    const model = JSON.parse(opts.body).model;
+    tried.push(model);
+    if (tried.length === 1) return { ok: false, status: 404, json: async () => ({ error: { message: 'no model' } }) };
+    return { ok: true, status: 200, json: async () => ({ choices: [{ message: { content: 'ok' } }] }) };
+  };
+  assert.strictEqual(await askGroq({ key: 'k', messages: [], fetchImpl }), 'ok');
+  assert.strictEqual(tried.length, 2);
+  assert.notStrictEqual(tried[0], tried[1]);
 });

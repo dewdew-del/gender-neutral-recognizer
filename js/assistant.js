@@ -4,7 +4,9 @@
   else root.Assistant = api;
 })(typeof self !== 'undefined' ? self : this, function () {
   const URL = 'https://api.groq.com/openai/v1/chat/completions';
-  const MODEL = 'llama-3.3-70b-versatile';
+  // Tried in order; the next one is used if a model is unavailable to the account (404).
+  const MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'openai/gpt-oss-20b'];
+  const MODEL = MODELS[0];
   const MAX_HISTORY = 6;
 
   function systemPrompt(terms) {
@@ -27,21 +29,31 @@
   async function askGroq({ key, messages, fetchImpl }) {
     if (!key) throw new Error('Please enter your Groq API key first.');
     const doFetch = fetchImpl || globalThis.fetch;
-    let res;
-    try {
-      res = await doFetch(URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
-        body: JSON.stringify({ model: MODEL, messages, temperature: 0.3, max_tokens: 400 }),
-      });
-    } catch (err) {
-      throw new Error('Could not reach Groq. Check your internet connection.');
+    let lastErr;
+    for (const model of MODELS) {
+      let res;
+      try {
+        res = await doFetch(URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
+          body: JSON.stringify({ model, messages, temperature: 0.3, max_tokens: 400 }),
+        });
+      } catch (err) {
+        throw new Error('Could not reach Groq. Check your internet connection.');
+      }
+      if (res.status === 401) throw new Error('That API key was rejected. Check it and try again.');
+      if (res.status === 429) throw new Error('Too many requests right now. Wait a moment and try again.');
+      if (!res.ok) {
+        const err = new Error('Groq could not answer right now. Please try again.');
+        err.status = res.status;
+        try { err.detail = String(((await res.json()).error || {}).message || '').slice(0, 300); } catch (x) { err.detail = ''; }
+        if (res.status === 404) { lastErr = err; continue; }
+        throw err;
+      }
+      const data = await res.json();
+      return data.choices[0].message.content.trim();
     }
-    if (res.status === 401) throw new Error('That API key was rejected. Check it and try again.');
-    if (res.status === 429) throw new Error('Too many requests right now. Wait a moment and try again.');
-    if (!res.ok) throw new Error('Groq could not answer right now. Please try again.');
-    const data = await res.json();
-    return data.choices[0].message.content.trim();
+    throw lastErr;
   }
 
   // Validate what the browser sends to the shared server-side helper.

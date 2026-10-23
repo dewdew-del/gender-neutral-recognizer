@@ -1,6 +1,6 @@
 # For the documentation team
 
-Material for **document section 2** (design / approach). The live link for section 3 is added once the app is published.
+Material for **document section 2** (design / approach). **Live link for section 3:** https://gender-neutral-recognizer.vercel.app
 
 ## Language and tools
 

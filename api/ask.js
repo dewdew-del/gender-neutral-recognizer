@@ -34,6 +34,6 @@ module.exports = async function handler(req, res) {
     const reply = await Assistant.askGroq({ key, messages });
     return res.status(200).json({ reply });
   } catch (err) {
-    return res.status(502).json({ error: err.message });
+    return res.status(502).json({ error: err.message, upstream: err.status || null, detail: err.detail || '' });
   }
 };
