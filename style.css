@@ -203,3 +203,8 @@ mark::after { content: attr(data-suggestion); display: inline-block; margin-left
 .legend .new { background: var(--accent); color: var(--on-accent); font-weight: 700; padding: 0 .5em; border-radius: 6px; }
 tbody td:nth-child(2) { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--bad); font-weight: 500; }
 tbody td:nth-child(4) { color: var(--text); font-weight: 700; }
+
+/* Softer: faint strike line, smaller replacement chip */
+mark { text-decoration-color: color-mix(in srgb, var(--bad) 40%, transparent); text-decoration-thickness: 1.5px; }
+mark::after { margin-left: .3em; padding: 0 .28em; border-radius: 3px; line-height: 1.25; font-size: .95em; }
+tbody td:nth-child(2) { text-decoration-color: color-mix(in srgb, var(--bad) 40%, transparent); text-decoration-thickness: 1.5px; }
