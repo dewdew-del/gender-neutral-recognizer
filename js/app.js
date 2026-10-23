@@ -136,7 +136,10 @@
       fileInput.dispatchEvent(new Event('change'));
     }
   });
-  document.querySelectorAll('.avatar img').forEach(img => img.addEventListener('error', () => img.remove()));
+  document.querySelectorAll('.avatar img').forEach(img => {
+    if (img.complete && img.naturalWidth === 0) img.remove();
+    else img.addEventListener('error', () => img.remove());
+  });
 
   // Floating mini windows (one open at a time)
   const floats = ['how', 'why', 'team', 'ask'].map(name => $('float-' + name));
