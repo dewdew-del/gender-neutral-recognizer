@@ -65,6 +65,7 @@
     tr.appendChild(el('td', String(total)));
     tr.appendChild(el('td', ''));
     resultsTotal.appendChild(tr);
+    $('results-summary').textContent = summary.length + (summary.length === 1 ? ' term' : ' different terms') + ' found, ' + total + (total === 1 ? ' occurrence' : ' occurrences') + ' in total.';
     resultsSection.hidden = false;
   }
 
@@ -123,6 +124,17 @@
   renderAutomatonPanel();
   $('trace-input').addEventListener('input', renderTrace);
   renderTrace();
+
+  const dropZone = $('drop-zone');
+  ['dragenter', 'dragover'].forEach(ev => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }));
+  ['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); }));
+  dropZone.addEventListener('drop', (e) => {
+    if (e.dataTransfer.files.length) {
+      fileInput.files = e.dataTransfer.files;
+      fileInput.dispatchEvent(new Event('change'));
+    }
+  });
+  $('jump-automaton').addEventListener('click', () => { $('automaton').open = true; });
 
   fileInput.addEventListener('change', async () => {
     clearOutput();
