@@ -186,3 +186,7 @@ button.primary { background: var(--text); color: var(--bg); border-color: var(--
 @media (prefers-color-scheme: dark) { :root { --ask: #d8ff3e; } }
 .topbar nav .ask-link { background: none; color: var(--ask); font-weight: 700; padding: 10px 0; margin: 0; border-radius: 0; box-shadow: none; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 6px; }
 .topbar nav .ask-link:hover, .topbar nav .ask-link:focus-visible { color: var(--ask); box-shadow: none; }
+
+.avatar img { object-position: center 25%; }
+.pname { display: flex; flex-direction: column; line-height: 1.25; }
+.pname small { font-weight: 400; color: var(--muted); font-size: .8rem; }
