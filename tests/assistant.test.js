@@ -42,3 +42,44 @@ test('askGroq turns failures into friendly errors', async () => {
   await assert.rejects(askGroq({ key: 'x', messages: [], fetchImpl: async () => { throw new Error('net'); } }), /could not reach/i);
   await assert.rejects(askGroq({ key: '', messages: [], fetchImpl: bad(200) }), /api key/i);
 });
+
+const { sanitizeRequest, askProxy } = require('../js/assistant.js');
+
+test('sanitizeRequest trims, caps and filters', () => {
+  const r = sanitizeRequest({
+    question: '  What is a DFA?  ',
+    history: [{ role: 'system', content: 'evil' }, { role: 'user', content: 'x'.repeat(2000) }, { role: 'assistant', content: 'ok' }, 'junk'],
+  });
+  assert.strictEqual(r.question, 'What is a DFA?');
+  assert.deepStrictEqual(r.history.map(m => m.role), ['user', 'assistant']);
+  assert.strictEqual(r.history[0].content.length, 1000);
+  assert.throws(() => sanitizeRequest({ question: '   ' }), /question/i);
+  assert.throws(() => sanitizeRequest({ question: 'q'.repeat(501) }), /too long/i);
+  assert.deepStrictEqual(sanitizeRequest({ question: 'hi' }).history, []);
+});
+
+test('askProxy returns the reply and maps errors', async () => {
+  const ok = async () => ({ ok: true, status: 200, json: async () => ({ reply: 'Hi there' }) });
+  assert.strictEqual(await askProxy({ question: 'hi', history: [], fetchImpl: ok }), 'Hi there');
+  const st = (status) => async () => ({ ok: false, status, json: async () => ({}) });
+  await assert.rejects(askProxy({ question: 'hi', history: [], fetchImpl: st(404) }), { code: 'NO_PROXY' });
+  await assert.rejects(askProxy({ question: 'hi', history: [], fetchImpl: st(429) }), /too many requests/i);
+  await assert.rejects(askProxy({ question: 'hi', history: [], fetchImpl: st(500) }), /could not answer/i);
+  await assert.rejects(askProxy({ question: 'hi', history: [], fetchImpl: async () => { throw new Error('x'); } }), { code: 'NO_PROXY' });
+});
+
+test('serverless handler uses the server-side key and rejects bad calls', async () => {
+  const handler = require('../api/ask.js');
+  const mkRes = () => { const r = { code: 200, body: null, headers: {} }; r.status = (c) => { r.code = c; return r; }; r.json = (b) => { r.body = b; return r; }; r.setHeader = (k, v) => { r.headers[k] = v; }; return r; };
+  let res = mkRes(); await handler({ method: 'GET', headers: {} }, res); assert.strictEqual(res.code, 405);
+  delete process.env.GROQ_API_KEY;
+  res = mkRes(); await handler({ method: 'POST', headers: {}, body: { question: 'hi' } }, res); assert.strictEqual(res.code, 500);
+  process.env.GROQ_API_KEY = 'gsk_server';
+  let seen;
+  globalThis.fetch = async (url, opts) => { seen = opts; return { ok: true, status: 200, json: async () => ({ choices: [{ message: { content: 'Answer' } }] }) }; };
+  res = mkRes(); await handler({ method: 'POST', headers: { 'x-forwarded-for': '1.1.1.1' }, body: { question: 'What is a DFA?' } }, res);
+  assert.strictEqual(res.code, 200); assert.deepStrictEqual(res.body, { reply: 'Answer' });
+  assert.strictEqual(seen.headers.Authorization, 'Bearer gsk_server');
+  res = mkRes(); await handler({ method: 'POST', headers: {}, body: { question: '' } }, res); assert.strictEqual(res.code, 400);
+  delete process.env.GROQ_API_KEY;
+});

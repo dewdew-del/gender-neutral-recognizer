@@ -44,5 +44,42 @@
     return data.choices[0].message.content.trim();
   }
 
-  return { URL, MODEL, buildMessages, askGroq };
+  // Validate what the browser sends to the shared server-side helper.
+  function sanitizeRequest(body) {
+    const question = typeof (body && body.question) === 'string' ? body.question.trim() : '';
+    if (!question) throw new Error('Please type a question.');
+    if (question.length > 500) throw new Error('That question is too long. Keep it under 500 characters.');
+    const history = (Array.isArray(body.history) ? body.history : [])
+      .filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+      .map(m => ({ role: m.role, content: m.content.slice(0, 1000) }))
+      .slice(-MAX_HISTORY);
+    return { question, history };
+  }
+
+  // Ask the shared helper (a serverless function that holds the Groq key).
+  async function askProxy({ question, history, fetchImpl, endpoint }) {
+    const doFetch = fetchImpl || globalThis.fetch;
+    let res;
+    try {
+      res = await doFetch(endpoint || '/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, history }),
+      });
+    } catch (err) {
+      const e = new Error('Could not reach the helper.');
+      e.code = 'NO_PROXY';
+      throw e;
+    }
+    if (res.status === 404 || res.status === 405) {
+      const e = new Error('The shared helper is not available here.');
+      e.code = 'NO_PROXY';
+      throw e;
+    }
+    if (res.status === 429) throw new Error('Too many requests right now. Wait a moment and try again.');
+    if (!res.ok) throw new Error('Groq could not answer right now. Please try again.');
+    return (await res.json()).reply;
+  }
+
+  return { URL, MODEL, buildMessages, askGroq, sanitizeRequest, askProxy };
 });

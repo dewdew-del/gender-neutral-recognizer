@@ -172,7 +172,6 @@
     return m;
   }
   addMsg('bot', 'Hi! Ask me how the recognizer works, what a DFA is, or why gender-neutral wording matters.');
-  $('key-box').open = !apiKey;
 
   $('key-form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -186,17 +185,26 @@
   async function ask(question) {
     addMsg('user', question);
     $('chat-chips').hidden = true;
-    if (!apiKey) { addMsg('err', 'Please enter your Groq API key first.'); $('key-box').open = true; return; }
     const send = $('chat-send');
     send.disabled = true;
     const thinking = addMsg('bot', '…');
     try {
-      const reply = await Assistant.askGroq({ key: apiKey, messages: Assistant.buildMessages(question, history, TERMS) });
+      let reply;
+      if (apiKey) {
+        reply = await Assistant.askGroq({ key: apiKey, messages: Assistant.buildMessages(question, history, TERMS) });
+      } else {
+        reply = await Assistant.askProxy({ question, history });
+      }
       thinking.textContent = reply;
       history.push({ role: 'user', content: question }, { role: 'assistant', content: reply });
     } catch (err) {
       thinking.remove();
-      addMsg('err', err.message);
+      if (err.code === 'NO_PROXY') {
+        addMsg('err', 'The shared helper is not available here. Add your own Groq API key below to ask questions.');
+        $('key-box').open = true;
+      } else {
+        addMsg('err', err.message);
+      }
     } finally {
       send.disabled = false;
     }
