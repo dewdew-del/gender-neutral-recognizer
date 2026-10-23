@@ -7,22 +7,25 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <header>
-      <p class="kicker">Automata &amp; Language Theory</p>
-      <h1>Gender-neutral <em>language</em> recognizer</h1>
-      <p class="lede">A finite automaton reads your document and marks gender-specific words in red, with a neutral alternative in the margin. Nothing is rewritten.</p>
-      <nav class="jump">
-        <a href="#results-section">Results</a>
-        <a href="#preview-section">Marked text</a>
-        <a href="#automaton" id="jump-automaton">The automaton</a>
+  <div class="shell">
+    <div class="topbar">
+      <span class="brand"><i></i>Neutral</span>
+      <nav>
+        <a href="#results-section">Findings</a>
+        <a href="#automaton" id="jump-automaton">Automaton</a>
       </nav>
+    </div>
+
+    <header class="hero">
+      <h1>Spot gendered words<br>in any document.</h1>
+      <p>Upload a file. A finite automaton finds the terms and suggests neutral wording. Your text is never changed.</p>
     </header>
 
     <section class="picker">
       <label for="file-input" id="drop-zone" class="drop-zone">
-        <span class="dz-main">Drop a document here, or <u>choose a file</u> &rarr;</span>
-        <span class="dz-hint">.txt &middot; .docx &middot; .pdf &mdash; samples are in the samples folder</span>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        <span class="dz-main">Drop a file or <span class="btn">Choose file</span></span>
+        <span class="dz-hint">.txt &middot; .docx &middot; .pdf</span>
         <span id="file-name"></span>
       </label>
       <input type="file" id="file-input" accept=".txt,.docx,.pdf">
@@ -30,35 +33,39 @@
 
     <div id="message" hidden></div>
 
-    <section id="results-section" hidden>
-      <h2><span class="num">01</span> Findings</h2>
-      <p id="results-summary" class="summary-strip"></p>
-      <div class="table-wrap">
-      <table id="results">
-        <thead>
-          <tr><th>#</th><th>Term</th><th>Count</th><th>Suggest instead</th></tr>
-        </thead>
-        <tbody id="results-body"></tbody>
-        <tfoot id="results-total"></tfoot>
-      </table>
-      </div>
-    </section>
+    <div class="grid">
+      <section id="results-section" class="panel" hidden>
+        <div class="stats">
+          <div><b id="stat-terms">0</b><span>terms found</span></div>
+          <div><b id="stat-total">0</b><span>occurrences</span></div>
+        </div>
+        <div class="table-wrap">
+          <table id="results">
+            <thead>
+              <tr><th>#</th><th>Term</th><th>Count</th><th>Use instead</th></tr>
+            </thead>
+            <tbody id="results-body"></tbody>
+            <tfoot id="results-total"></tfoot>
+          </table>
+        </div>
+      </section>
 
-    <section id="preview-section" hidden>
-      <h2><span class="num">02</span> Marked text</h2>
-      <pre id="preview"></pre>
-    </section>
+      <section id="preview-section" class="panel" hidden>
+        <h2>Your text</h2>
+        <pre id="preview"></pre>
+      </section>
+    </div>
 
-    <details id="automaton">
-      <summary><span class="num">03</span> The automaton</summary>
+    <details id="automaton" class="panel">
+      <summary>How the automaton sees it</summary>
       <p id="fsa-summary"></p>
-      <h3>Trace a word</h3>
+      <h3>Try a word</h3>
       <input type="text" id="trace-input" value="fireman" autocomplete="off" spellcheck="false" aria-label="Word or phrase to trace">
       <div id="trace-output"></div>
       <h3>Transition table</h3>
       <div id="transition-table"></div>
     </details>
-  </main>
+  </div>
 
   <script src="lib/mammoth.browser.min.js"></script>
   <script src="lib/pdf.min.js"></script>

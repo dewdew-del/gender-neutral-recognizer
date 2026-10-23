@@ -66,7 +66,8 @@
     tr.appendChild(el('td', String(total)));
     tr.appendChild(el('td', ''));
     resultsTotal.appendChild(tr);
-    $('results-summary').textContent = summary.length + (summary.length === 1 ? ' term' : ' different terms') + ' found, ' + total + (total === 1 ? ' occurrence' : ' occurrences') + ' in total.';
+    $('stat-terms').textContent = String(summary.length);
+    $('stat-total').textContent = String(total);
     resultsSection.hidden = false;
   }
 
