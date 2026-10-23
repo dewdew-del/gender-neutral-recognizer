@@ -79,3 +79,23 @@ The full transition table is in the app: open **Automaton** → *Transition tabl
 - No context awareness: "her" is always flagged, and the suggestion needs a person's review. The app never changes the text.
 - Scanned PDFs (images) have no extractable text.
 - Legacy `.doc` (Word 97–2003) files are not supported.
+
+## Test results (document section 3)
+
+Run in the browser on 2026-10-23 by uploading each file from `samples/`.
+
+| # | Test case | File | Expected result | Actual result | Pass/Fail |
+|---|-----------|------|-----------------|---------------|-----------|
+| 1 | Several different listed terms | `1-with-terms.txt` | Table of the terms found with counts and suggestions | 13 different terms, 13 occurrences in total (chairman, policeman, fireman, spokesman, waitress, cleaning lady, she, her, him, mankind, manpower, he, himself), each with its suggestion | Pass |
+| 2 | Same term repeated in different cases | `2-repeated-mixed-case.txt` | Case variants counted together | chairman = 3 (Chairman, CHAIRMAN, chairman); he = 3 (He, he, HE); total 6 | Pass |
+| 3 | No terms (contains "the", "there", "other", "theme", "shell") | `3-no-terms.txt` | "No predefined gender-specific terms were detected." | That exact message; no results table (preview still shown) | Pass |
+| 4 | Empty file | `4-empty.txt` | "The file is empty. Please upload a file that contains text." | That exact message | Pass |
+| 5 | Unsupported format | `5-unsupported.rtf` | "Unsupported file format. Please upload a .txt, .docx, or .pdf file." | That exact message | Pass |
+| 6 | Optional: Word document | `6-sample.docx` | Same table as test 1 | Same as test 1 (13 terms, 13 occurrences) | Pass |
+| 7 | Optional: PDF | `7-sample.pdf` | Same table as test 1 | Same as test 1 (13 terms, 13 occurrences) | Pass |
+
+Also checked: text that looks like HTML (`<b>he</b> <script>alert(1)</script>`) is shown literally in the preview, nothing runs, and "he" is highlighted. The browser console showed no errors.
+
+### Screenshots to take (by the team)
+
+Open the app (see README) and capture: file selection, results with counts (`1-with-terms.txt`), the no-terms result, the empty-file message, the unsupported-format message, and the Automaton panel (summary, trace of `fireman`, transition table).
