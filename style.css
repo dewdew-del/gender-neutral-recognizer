@@ -25,7 +25,8 @@ body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--
 .topbar a { color: var(--muted); text-decoration: none; padding: 10px 0; }
 .topbar a:hover, .topbar a:focus-visible { color: var(--text); outline: none; }
 
-.hero { padding: 72px 0 36px; }
+.hero { padding: 56px 0 36px; }
+.eyebrow { display: inline-block; margin: 0 0 22px !important; padding: 7px 14px; background: var(--accent); color: var(--on-accent) !important; border-radius: 999px; font-size: .85rem !important; font-weight: 700; letter-spacing: .02em; max-width: none !important; }
 h1 { font-size: clamp(2.3rem, 7vw, 4.4rem); line-height: 1.02; letter-spacing: -.045em; font-weight: 700; margin: 0 0 18px; }
 .hero p { color: var(--muted); font-size: 1.1rem; max-width: 46ch; margin: 0; }
 
