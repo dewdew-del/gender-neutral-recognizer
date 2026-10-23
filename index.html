@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gender Neutral Language Recognizer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Gender Neutral Language Recognizer</h1>
+    <p>Upload a .txt, .docx, or .pdf file. A finite automaton finds gender-specific terms and suggests neutral alternatives. Your text is never changed.</p>
+  </header>
+
+  <main>
+    <section class="picker">
+      <label for="file-input">Choose a document:</label>
+      <input type="file" id="file-input" accept=".txt,.docx,.pdf">
+      <span id="file-name"></span>
+    </section>
+
+    <div id="message" hidden></div>
+
+    <section id="results-section" hidden>
+      <h2>Results</h2>
+      <table id="results">
+        <thead>
+          <tr><th>#</th><th>Gender-specific term</th><th>Occurrences</th><th>Suggested alternative</th></tr>
+        </thead>
+        <tbody id="results-body"></tbody>
+        <tfoot id="results-total"></tfoot>
+      </table>
+    </section>
+
+    <section id="preview-section" hidden>
+      <h2>Document preview</h2>
+      <pre id="preview"></pre>
+    </section>
+
+    <details id="automaton">
+      <summary>Automaton</summary>
+      <p id="fsa-summary"></p>
+      <h3>Trace a word or phrase</h3>
+      <input type="text" id="trace-input" value="fireman" autocomplete="off" spellcheck="false">
+      <div id="trace-output"></div>
+      <h3>Transition table</h3>
+      <div id="transition-table"></div>
+    </details>
+  </main>
+
+  <script src="lib/mammoth.browser.min.js"></script>
+  <script src="lib/pdf.min.js"></script>
+  <script src="js/terms.js"></script>
+  <script src="js/fsa.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/fileReader.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
