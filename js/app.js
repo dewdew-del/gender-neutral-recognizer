@@ -136,10 +136,10 @@
       fileInput.dispatchEvent(new Event('change'));
     }
   });
-  $('jump-automaton').addEventListener('click', () => { $('automaton').open = true; });
+  document.querySelectorAll('.avatar img').forEach(img => img.addEventListener('error', () => img.remove()));
 
   // Floating mini windows (one open at a time)
-  const floats = ['why', 'team', 'ask'].map(name => $('float-' + name));
+  const floats = ['how', 'why', 'team', 'ask'].map(name => $('float-' + name));
   function closeFloats() { floats.forEach(f => { f.hidden = true; }); }
   document.querySelectorAll('[data-open]').forEach(btn => btn.addEventListener('click', () => {
     const target = $('float-' + btn.dataset.open);
