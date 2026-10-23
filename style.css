@@ -12,8 +12,9 @@
   --mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #0e0e0d; --panel: #181817; --text: #f2f2ee; --muted: #8d8d85; --line: #2c2c29; --ok: #6bd98c; --bad: #ff7676; }
+  :root:not([data-theme="light"]) { --bg: #0e0e0d; --panel: #181817; --text: #f2f2ee; --muted: #8d8d85; --line: #2c2c29; --ok: #6bd98c; --bad: #ff7676; }
 }
+:root[data-theme="dark"] { --bg: #0e0e0d; --panel: #181817; --text: #f2f2ee; --muted: #8d8d85; --line: #2c2c29; --ok: #6bd98c; --bad: #ff7676; }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
 .shell { max-width: 1040px; margin: 0 auto; padding: 20px 20px 80px; }
@@ -183,10 +184,13 @@ button.primary { background: var(--text); color: var(--bg); border-color: var(--
 
 /* Ask a question: plain yellow text link (no pill) */
 :root { --ask: #8a7a00; }
-@media (prefers-color-scheme: dark) { :root { --ask: #d8ff3e; } }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ask: #d8ff3e; } }
+:root[data-theme="dark"] { --ask: #d8ff3e; }
 .topbar nav .ask-link { background: none; color: var(--ask); font-weight: 700; padding: 10px 0; margin: 0; border-radius: 0; box-shadow: none; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 6px; }
 .topbar nav .ask-link:hover, .topbar nav .ask-link:focus-visible { color: var(--ask); box-shadow: none; }
 
 .avatar img { object-position: center 25%; }
 .pname { display: flex; flex-direction: column; line-height: 1.25; }
 .pname small { font-weight: 400; color: var(--muted); font-size: .8rem; }
+
+.topbar nav .theme-btn { font-size: .85rem; }

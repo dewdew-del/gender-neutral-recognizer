@@ -141,6 +141,19 @@
     else img.addEventListener('error', () => img.remove());
   });
 
+  // Light / dark switch (follows the system until the user picks one)
+  const root = document.documentElement;
+  const themeBtn = $('theme-toggle');
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  function paintThemeBtn() { themeBtn.textContent = isDark() ? 'Light' : 'Dark'; }
+  try { const saved = localStorage.getItem('gnr-theme'); if (saved === 'light' || saved === 'dark') root.dataset.theme = saved; } catch (e) { /* storage unavailable */ }
+  paintThemeBtn();
+  themeBtn.addEventListener('click', () => {
+    root.dataset.theme = isDark() ? 'light' : 'dark';
+    try { localStorage.setItem('gnr-theme', root.dataset.theme); } catch (e) { /* storage unavailable */ }
+    paintThemeBtn();
+  });
+
   // Floating mini windows (one open at a time)
   const floats = ['how', 'why', 'team', 'ask'].map(name => $('float-' + name));
   function closeFloats() { floats.forEach(f => { f.hidden = true; }); }
