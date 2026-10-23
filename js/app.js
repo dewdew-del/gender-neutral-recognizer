@@ -68,6 +68,62 @@
     resultsSection.hidden = false;
   }
 
+  const q = (n) => 'q' + n;
+
+  function renderAutomatonPanel() {
+    const rows = FSA.transitionRows(dfa, TERMS);
+    const accepting = rows.filter(r => r.accepting).length;
+    $('fsa-summary').textContent = dfa.states + ' states · ' + accepting + ' accepting states · Σ = {a–z, ␣}. ' +
+      'Any missing transition goes to an implicit dead state; states entered on ␣ loop on ␣ so phrases match across extra spaces and line breaks.';
+
+    const table = el('table');
+    const head = el('tr');
+    ['State', 'Transitions', 'Accepts'].forEach(h => head.appendChild(el('th', h)));
+    table.appendChild(el('thead')).appendChild(head);
+    const body = el('tbody');
+    for (const r of rows) {
+      const tr = el('tr');
+      tr.appendChild(el('td', q(r.state) + (r.accepting ? ' ◎' : '')));
+      tr.appendChild(el('td', r.transitions.map(([s, n]) => (s === ' ' ? '␣' : s) + ' → ' + q(n)).join(', ')));
+      tr.appendChild(el('td', r.term || ''));
+      body.appendChild(tr);
+    }
+    table.appendChild(body);
+    $('transition-table').appendChild(table);
+  }
+
+  function renderTrace() {
+    const out = $('trace-output');
+    out.textContent = '';
+    const word = $('trace-input').value;
+    if (word === '') return;
+    const t = FSA.trace(dfa, word);
+    const show = (s) => (s === ' ' ? '␣' : s);
+    let line = 'q0';
+    for (const step of t.path) {
+      line += ' —' + show(step.symbol) + '→ ' + (step.to === null ? '∅' : q(step.to));
+    }
+    out.appendChild(el('div', line));
+    const last = t.path[t.path.length - 1];
+    let verdict;
+    if (t.accepted) {
+      const term = TERMS[t.termIndex];
+      verdict = el('div', '✔ Accepted: ' + term.term + ' → ' + term.suggestion);
+      verdict.className = 'accepted';
+    } else if (last.to === null) {
+      verdict = el('div', "✘ Rejected (dead state after '" + show(last.symbol) + "')");
+      verdict.className = 'rejected';
+    } else {
+      verdict = el('div', '✘ Rejected (' + q(last.to) + ' is not accepting)');
+      verdict.className = 'rejected';
+    }
+    out.appendChild(verdict);
+  }
+
+  renderAutomatonPanel();
+  $('trace-input').addEventListener('input', renderTrace);
+  renderTrace();
+
   fileInput.addEventListener('change', async () => {
     clearOutput();
     const file = fileInput.files[0];
