@@ -180,3 +180,9 @@ button.primary { background: var(--text); color: var(--bg); border-color: var(--
 .topbar nav .ask-link:hover, .topbar nav .ask-link:focus-visible { color: var(--on-accent); box-shadow: 0 0 0 2px var(--text); }
 .float, .float.wide { top: 64px; bottom: auto; right: max(16px, calc((100vw - 1040px) / 2 + 20px)); max-height: calc(100vh - 88px); }
 .foot { padding-bottom: 40px; }
+
+/* Ask a question: plain yellow text link (no pill) */
+:root { --ask: #8a7a00; }
+@media (prefers-color-scheme: dark) { :root { --ask: #d8ff3e; } }
+.topbar nav .ask-link { background: none; color: var(--ask); font-weight: 700; padding: 10px 0; margin: 0; border-radius: 0; box-shadow: none; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 6px; }
+.topbar nav .ask-link:hover, .topbar nav .ask-link:focus-visible { color: var(--ask); box-shadow: none; }
