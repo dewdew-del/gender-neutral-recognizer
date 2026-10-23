@@ -1,0 +1,5 @@
+{
+  "name": "gender-neutral-recognizer",
+  "private": true,
+  "scripts": { "test": "node --test tests/*.test.js" }
+}
