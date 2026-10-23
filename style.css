@@ -194,3 +194,12 @@ button.primary { background: var(--text); color: var(--bg); border-color: var(--
 .pname small { font-weight: 400; color: var(--muted); font-size: .8rem; }
 
 .topbar nav .theme-btn { font-size: .85rem; }
+
+/* Clear before/after: the flagged word is struck through and faded, the replacement is bold in a highlighted chip */
+mark { background: none; color: var(--muted); padding: 0; border-radius: 0; text-decoration: line-through; text-decoration-color: var(--bad); text-decoration-thickness: 2px; }
+mark::after { content: attr(data-suggestion); display: inline-block; margin-left: .45em; padding: 0 .5em; border-radius: 6px; background: var(--accent); color: var(--on-accent); font-size: 1em; font-weight: 700; opacity: 1; line-height: 1.5; }
+.legend { margin: 0 0 14px; font-size: .85rem; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.legend .old { text-decoration: line-through; text-decoration-color: var(--bad); text-decoration-thickness: 2px; }
+.legend .new { background: var(--accent); color: var(--on-accent); font-weight: 700; padding: 0 .5em; border-radius: 6px; }
+tbody td:nth-child(2) { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--bad); font-weight: 500; }
+tbody td:nth-child(4) { color: var(--text); font-weight: 700; }
