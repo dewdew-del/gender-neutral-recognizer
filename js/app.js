@@ -157,10 +157,6 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeFloats(); });
 
   // Question helper (Groq)
-  const KEY_STORE = 'gnr-groq-key';
-  function loadKey() { try { return localStorage.getItem(KEY_STORE) || ''; } catch (e) { return ''; } }
-  function saveKey(v) { try { if (v) localStorage.setItem(KEY_STORE, v); else localStorage.removeItem(KEY_STORE); } catch (e) { /* storage unavailable */ } }
-  let apiKey = loadKey();
   const chatLog = $('chat-log');
   const history = [];
 
@@ -173,14 +169,6 @@
   }
   addMsg('bot', 'Hi! Ask me how the recognizer works, what a DFA is, or why gender-neutral wording matters.');
 
-  $('key-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    apiKey = $('key-input').value.trim();
-    saveKey(apiKey);
-    $('key-input').value = '';
-    if (apiKey) { $('key-box').open = false; addMsg('bot', 'Key saved in this browser.'); }
-  });
-  $('key-clear').addEventListener('click', () => { apiKey = ''; saveKey(''); $('key-input').value = ''; addMsg('bot', 'Key removed.'); });
 
   async function ask(question) {
     addMsg('user', question);
@@ -189,19 +177,13 @@
     send.disabled = true;
     const thinking = addMsg('bot', '…');
     try {
-      let reply;
-      if (apiKey) {
-        reply = await Assistant.askGroq({ key: apiKey, messages: Assistant.buildMessages(question, history, TERMS) });
-      } else {
-        reply = await Assistant.askProxy({ question, history });
-      }
+      const reply = await Assistant.askProxy({ question, history });
       thinking.textContent = reply;
       history.push({ role: 'user', content: question }, { role: 'assistant', content: reply });
     } catch (err) {
       thinking.remove();
       if (err.code === 'NO_PROXY') {
-        addMsg('err', 'The shared helper is not available here. Add your own Groq API key below to ask questions.');
-        $('key-box').open = true;
+        addMsg('err', 'The question helper is not available right now. Please try again later.');
       } else {
         addMsg('err', err.message);
       }

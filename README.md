@@ -43,7 +43,7 @@ docs/                   spec, plan, and notes for the documentation team
 
 ## Question helper (Groq)
 
-The "Ask a question" window answers questions about the project using the Groq API. Each user pastes their own free key from https://console.groq.com/keys. The key is kept only in that browser's localStorage and is sent only to Groq; it is never stored in this repository. Do not hard-code a key in the source.
+The "Ask a question" window answers questions about the project using the Groq API through a serverless function (`api/ask.js`). The Groq key is stored only as the `GROQ_API_KEY` environment variable on the host and is never in this repository. Do not hard-code a key in the source.
 
 ### Shared helper for everyone (Vercel)
 

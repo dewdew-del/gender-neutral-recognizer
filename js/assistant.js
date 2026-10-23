@@ -12,7 +12,7 @@
   function systemPrompt(terms) {
     const list = terms.map(t => t.term + ' -> ' + t.suggestion).join('; ');
     return [
-      'You are the help assistant for the "Gender Neutral Language Recognizer", a student final project for Automata and Language Theory (BSCS 3A).',
+      'You are the help assistant for the "Gender Neutral Language Recognizer", a student final project for Automata and Language Theory (BSCS 2B).',
       'The app is a static web page written in HTML, CSS and JavaScript. It reads .txt, .docx (mammoth.js) and .pdf (pdf.js) files.',
       'It finds gender-specific terms with a hand-built deterministic finite automaton (a trie with 125 states, alphabet a-z and space, case-insensitive, whole-word, longest match, space self-loop for phrases like "cleaning lady"). It does not use regular expressions to match terms, and it never rewrites the document: it only shows counts, highlights and suggestions.',
       'The 24 terms and suggestions are: ' + list + '.',

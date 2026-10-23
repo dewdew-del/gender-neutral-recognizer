@@ -1,7 +1,7 @@
 # Gender Neutral Language Recognizer — Design Spec
 
 Date: 2026-10-23
-Course: Automata and Language Theory (BSCS 3A), instructor Alma Mae B. Auxtero
+Course: Automata and Language Theory (BSCS 2B), instructor Alma Mae B. Auxtero
 Deadline: 3 days (2026-10-26)
 Roles: one developer (code); group members (project document, screenshots, demo prep)
 
