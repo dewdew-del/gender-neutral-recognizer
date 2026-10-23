@@ -170,3 +170,13 @@ button.primary { background: var(--text); color: var(--bg); border-color: var(--
 .float details#automaton summary::-webkit-details-marker { display: none; }
 .float details#automaton summary::after { content: "+"; font-family: var(--mono); color: var(--muted); }
 .float details#automaton[open] summary::after { content: "–"; }
+
+/* Top links open floating windows under the nav */
+.topbar { position: sticky; top: 0; z-index: 25; background: var(--bg); padding: 8px 0; }
+.topbar nav { display: flex; flex-wrap: wrap; gap: 4px 18px; justify-content: flex-end; }
+.topbar nav button { font: inherit; font-size: .92rem; color: var(--muted); background: none; border: 0; padding: 10px 0; cursor: pointer; }
+.topbar nav button:hover, .topbar nav button:focus-visible { color: var(--text); outline: none; }
+.topbar nav .ask-link { color: var(--on-accent); background: var(--accent); font-weight: 600; padding: 8px 14px; border-radius: 999px; margin: 2px 0; }
+.topbar nav .ask-link:hover, .topbar nav .ask-link:focus-visible { color: var(--on-accent); box-shadow: 0 0 0 2px var(--text); }
+.float, .float.wide { top: 64px; bottom: auto; right: max(16px, calc((100vw - 1040px) / 2 + 20px)); max-height: calc(100vh - 88px); }
+.foot { padding-bottom: 40px; }
