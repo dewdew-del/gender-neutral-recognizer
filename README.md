@@ -28,6 +28,7 @@ js/terms.js             the 24 terms and suggestions
 js/fsa.js               DFA build, scan, summary, trace, transition table
 js/fileReader.js        file -> text, with validation messages
 js/render.js            text + matches -> preview segments
+js/assistant.js         Groq question helper (prompt + API call)
 js/app.js               wires the page together
 lib/                    vendored mammoth.js and pdf.js (works offline)
 samples/                test files for the demo
@@ -39,3 +40,7 @@ docs/                   spec, plan, and notes for the documentation team
 
 - [mammoth.js](https://github.com/mwilliamson/mammoth.js) 1.8.0 for `.docx`
 - [pdf.js](https://github.com/mozilla/pdf.js) 3.11.174 for `.pdf`
+
+## Question helper (Groq)
+
+The "Ask a question" window answers questions about the project using the Groq API. Each user pastes their own free key from https://console.groq.com/keys. The key is kept only in that browser's localStorage and is sent only to Groq; it is never stored in this repository. Do not hard-code a key in the source.

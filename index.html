@@ -9,12 +9,8 @@
 <body>
   <div class="shell">
     <div class="topbar">
-      <span class="course">Final project &middot; Automata and Language Theory</span>
-      <nav>
-        <a href="#how" id="jump-automaton">How it works</a>
-        <a href="#why">Why it matters</a>
-        <a href="#team">Team</a>
-      </nav>
+      <span></span>
+      <nav><a href="#how" id="jump-automaton">How it works</a></nav>
     </div>
 
     <header class="hero">
@@ -77,23 +73,62 @@
     </details>
     </section>
 
-    <section id="why" class="panel about">
-      <h2>Why it matters</h2>
-      <p>Words like &ldquo;chairman&rdquo; or &ldquo;fireman&rdquo; quietly assume who does a job. Inclusive wording makes policies, job posts and reports welcome to everyone, and it is easy to miss in your own writing. This tool points out the terms so a person can decide what to change.</p>
-    </section>
 
-    <section id="team" class="panel about">
-      <h2>Team</h2>
-      <p>A final project for <b>Automata and Language Theory</b>, BSCS 3A.</p>
-      <ul class="people">
-        <li>Member name 1</li>
-        <li>Member name 2</li>
-        <li>Member name 3</li>
-        <li>Member name 4</li>
-      </ul>
-      <p class="credit">With thanks to our instructor, <b>Alma Mae B. Auxtero</b>, for guiding this project.</p>
-    </section>
+    <footer class="foot">
+      <p>Final project &middot; Automata and Language Theory &middot; BSCS 3A</p>
+      <p>Instructor: Alma Mae B. Auxtero</p>
+    </footer>
   </div>
+
+  <div class="dock" role="toolbar" aria-label="More information">
+    <button type="button" data-open="why">Why it matters</button>
+    <button type="button" data-open="team">Team</button>
+    <button type="button" data-open="ask" class="primary">Ask a question</button>
+  </div>
+
+  <aside id="float-why" class="float" role="dialog" aria-label="Why it matters" hidden>
+    <button type="button" class="x" data-close aria-label="Close">&times;</button>
+    <h2>Why it matters</h2>
+    <p>Words like &ldquo;chairman&rdquo; or &ldquo;fireman&rdquo; quietly assume who does a job. Inclusive wording makes policies, job posts and reports welcome to everyone, and it is easy to miss in your own writing.</p>
+    <p>This tool points out the terms so a person can decide what to change. It never edits your file.</p>
+  </aside>
+
+  <aside id="float-team" class="float" role="dialog" aria-label="Team" hidden>
+    <button type="button" class="x" data-close aria-label="Close">&times;</button>
+    <h2>Team</h2>
+    <p>A final project for <b>Automata and Language Theory</b>, BSCS 3A.</p>
+    <ul class="people">
+      <li>Member name 1</li>
+      <li>Member name 2</li>
+      <li>Member name 3</li>
+      <li>Member name 4</li>
+    </ul>
+    <p class="credit">With thanks to our instructor, <b>Alma Mae B. Auxtero</b>, for guiding this project.</p>
+  </aside>
+
+  <aside id="float-ask" class="float ask" role="dialog" aria-label="Ask a question" hidden>
+    <button type="button" class="x" data-close aria-label="Close">&times;</button>
+    <h2>Ask a question</h2>
+    <div id="chat-log" aria-live="polite"></div>
+    <div id="chat-chips">
+      <button type="button" class="chip">Why is &ldquo;he&rdquo; not found in &ldquo;the&rdquo;?</button>
+      <button type="button" class="chip">What is a DFA?</button>
+      <button type="button" class="chip">Why use an automaton instead of regex?</button>
+    </div>
+    <form id="chat-form" autocomplete="off">
+      <input type="text" id="chat-input" placeholder="Ask about the project or automata" aria-label="Your question" required>
+      <button type="submit" id="chat-send" class="primary">Send</button>
+    </form>
+    <details id="key-box">
+      <summary>Groq API key</summary>
+      <p>Answers come from Groq. Paste your own free key from <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>. It stays in this browser only and is sent only to Groq.</p>
+      <form id="key-form" autocomplete="off">
+        <input type="password" id="key-input" placeholder="gsk_..." aria-label="Groq API key">
+        <button type="submit">Save</button>
+        <button type="button" id="key-clear">Remove</button>
+      </form>
+    </details>
+  </aside>
 
   <script src="lib/mammoth.browser.min.js"></script>
   <script src="lib/pdf.min.js"></script>
@@ -101,6 +136,7 @@
   <script src="js/fsa.js"></script>
   <script src="js/render.js"></script>
   <script src="js/fileReader.js"></script>
+  <script src="js/assistant.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

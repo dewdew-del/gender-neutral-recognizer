@@ -138,6 +138,75 @@
   });
   $('jump-automaton').addEventListener('click', () => { $('automaton').open = true; });
 
+  // Floating mini windows (one open at a time)
+  const floats = ['why', 'team', 'ask'].map(name => $('float-' + name));
+  function closeFloats() { floats.forEach(f => { f.hidden = true; }); }
+  document.querySelectorAll('[data-open]').forEach(btn => btn.addEventListener('click', () => {
+    const target = $('float-' + btn.dataset.open);
+    const wasOpen = !target.hidden;
+    closeFloats();
+    if (!wasOpen) {
+      target.hidden = false;
+      if (btn.dataset.open === 'ask') $('chat-input').focus();
+    }
+  }));
+  document.querySelectorAll('[data-close]').forEach(btn => btn.addEventListener('click', closeFloats));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeFloats(); });
+
+  // Question helper (Groq)
+  const KEY_STORE = 'gnr-groq-key';
+  function loadKey() { try { return localStorage.getItem(KEY_STORE) || ''; } catch (e) { return ''; } }
+  function saveKey(v) { try { if (v) localStorage.setItem(KEY_STORE, v); else localStorage.removeItem(KEY_STORE); } catch (e) { /* storage unavailable */ } }
+  let apiKey = loadKey();
+  const chatLog = $('chat-log');
+  const history = [];
+
+  function addMsg(kind, text) {
+    const m = el('div', text);
+    m.className = 'msg ' + kind;
+    chatLog.appendChild(m);
+    chatLog.scrollTop = chatLog.scrollHeight;
+    return m;
+  }
+  addMsg('bot', 'Hi! Ask me how the recognizer works, what a DFA is, or why gender-neutral wording matters.');
+  $('key-box').open = !apiKey;
+
+  $('key-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    apiKey = $('key-input').value.trim();
+    saveKey(apiKey);
+    $('key-input').value = '';
+    if (apiKey) { $('key-box').open = false; addMsg('bot', 'Key saved in this browser.'); }
+  });
+  $('key-clear').addEventListener('click', () => { apiKey = ''; saveKey(''); $('key-input').value = ''; addMsg('bot', 'Key removed.'); });
+
+  async function ask(question) {
+    addMsg('user', question);
+    $('chat-chips').hidden = true;
+    if (!apiKey) { addMsg('err', 'Please enter your Groq API key first.'); $('key-box').open = true; return; }
+    const send = $('chat-send');
+    send.disabled = true;
+    const thinking = addMsg('bot', '…');
+    try {
+      const reply = await Assistant.askGroq({ key: apiKey, messages: Assistant.buildMessages(question, history, TERMS) });
+      thinking.textContent = reply;
+      history.push({ role: 'user', content: question }, { role: 'assistant', content: reply });
+    } catch (err) {
+      thinking.remove();
+      addMsg('err', err.message);
+    } finally {
+      send.disabled = false;
+    }
+  }
+  $('chat-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = $('chat-input').value.trim();
+    if (!q) return;
+    $('chat-input').value = '';
+    ask(q);
+  });
+  document.querySelectorAll('.chip').forEach(chip => chip.addEventListener('click', () => ask(chip.textContent)));
+
   fileInput.addEventListener('change', async () => {
     clearOutput();
     const file = fileInput.files[0];

@@ -110,3 +110,41 @@ h3 { font-size: .8rem; font-weight: 500; color: var(--muted); margin: 22px 0 8px
 .people { list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .people li { background: var(--bg); border-radius: 999px; padding: 6px 14px; font-weight: 600; font-size: .92rem; }
 .credit { margin: 0 !important; padding: 10px 14px; background: var(--accent); color: var(--on-accent) !important; border-radius: 12px; display: inline-block; }
+
+/* Footer */
+.foot { margin-top: 40px; padding: 24px 0 70px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; }
+.foot p { margin: 0 0 2px; }
+
+/* Floating dock and mini windows */
+.dock { position: fixed; right: 16px; bottom: 16px; display: flex; gap: 8px; z-index: 20; flex-wrap: wrap; justify-content: flex-end; max-width: calc(100vw - 32px); }
+.dock button, #key-form button, .chip { font: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 999px; padding: 10px 16px; font-size: .9rem; font-weight: 600; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.dock button:hover, .chip:hover { border-color: var(--text); }
+button.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.float { position: fixed; right: 16px; bottom: 72px; width: min(360px, calc(100vw - 32px)); max-height: min(70vh, 560px); overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 20px; z-index: 30; box-shadow: 0 12px 40px rgba(0,0,0,.18); animation: pop .16s ease-out; }
+.float[hidden] { display: none; }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .float { animation: none; } }
+.float h2 { color: var(--text); font-size: 1.1rem; margin: 0 28px 10px 0; }
+.float p { margin: 0 0 10px; font-size: .93rem; }
+.float .x { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: var(--bg); color: var(--text); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+
+/* Chat */
+#chat-log { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; max-height: 180px; overflow: auto; }
+.msg { padding: 9px 13px; border-radius: 14px; font-size: .92rem; max-width: 92%; white-space: pre-wrap; word-wrap: break-word; }
+.msg.user { align-self: flex-end; background: var(--text); color: var(--bg); }
+.msg.bot { align-self: flex-start; background: var(--bg); }
+.msg.err { align-self: flex-start; background: none; border: 1px solid var(--bad); color: var(--bad); }
+#chat-chips { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 10px; }
+.chip { box-shadow: none; font-weight: 500; font-size: .84rem; padding: 7px 12px; text-align: left; }
+#chat-form, #key-form { display: flex; gap: 6px; }
+#chat-input, #key-input { flex: 1; min-width: 0; font: inherit; font-size: .92rem; padding: 10px 14px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--text); }
+#chat-input:focus, #key-input:focus { outline: none; border-color: var(--text); }
+#chat-send { font: inherit; font-size: .9rem; font-weight: 600; padding: 10px 16px; border-radius: 999px; cursor: pointer; box-shadow: none; }
+#chat-send:disabled { opacity: .5; cursor: wait; }
+#key-box { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+#key-box summary { cursor: pointer; font-size: .85rem; color: var(--muted); font-weight: 600; list-style: none; }
+#key-box summary::-webkit-details-marker { display: none; }
+#key-box p { font-size: .8rem; color: var(--muted); margin: 8px 0; }
+#key-box a { color: var(--text); }
+#key-form button { box-shadow: none; padding: 8px 12px; font-size: .82rem; }
+#chat-chips[hidden] { display: none; }
