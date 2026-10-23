@@ -9,10 +9,11 @@
 <body>
   <div class="shell">
     <div class="topbar">
-      <span></span>
+      <span class="course">Final project &middot; Automata and Language Theory</span>
       <nav>
-        <a href="#results-section">Findings</a>
-        <a href="#automaton" id="jump-automaton">Automaton</a>
+        <a href="#how" id="jump-automaton">How it works</a>
+        <a href="#why">Why it matters</a>
+        <a href="#team">Team</a>
       </nav>
     </div>
 
@@ -57,7 +58,15 @@
       </section>
     </div>
 
-    <details id="automaton" class="panel">
+    <section id="how" class="panel about">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li><b>Read.</b> The file is turned into plain text: .txt directly, .docx with mammoth.js, .pdf with pdf.js.</li>
+        <li><b>Scan.</b> A finite automaton walks through the text one letter at a time. The 24 terms are paths through a tree of 125 states, so every word is checked in a single pass. It ignores upper and lower case and only counts whole words, so &ldquo;he&rdquo; is not found inside &ldquo;the&rdquo;.</li>
+        <li><b>Report.</b> Each hit is counted, highlighted in your text, and paired with a neutral suggestion. Nothing is rewritten.</li>
+      </ol>
+      <p class="built"><b>Built with</b> HTML, CSS and JavaScript (no framework). Matching uses a hand-built DFA, not regular expressions.</p>
+    <details id="automaton">
       <summary>How the automaton sees it</summary>
       <p id="fsa-summary"></p>
       <h3>Try a word</h3>
@@ -66,6 +75,24 @@
       <h3>Transition table</h3>
       <div id="transition-table"></div>
     </details>
+    </section>
+
+    <section id="why" class="panel about">
+      <h2>Why it matters</h2>
+      <p>Words like &ldquo;chairman&rdquo; or &ldquo;fireman&rdquo; quietly assume who does a job. Inclusive wording makes policies, job posts and reports welcome to everyone, and it is easy to miss in your own writing. This tool points out the terms so a person can decide what to change.</p>
+    </section>
+
+    <section id="team" class="panel about">
+      <h2>Team</h2>
+      <p>A final project for <b>Automata and Language Theory</b>, BSCS 3A.</p>
+      <ul class="people">
+        <li>Member name 1</li>
+        <li>Member name 2</li>
+        <li>Member name 3</li>
+        <li>Member name 4</li>
+      </ul>
+      <p class="credit">With thanks to our instructor, <b>Alma Mae B. Auxtero</b>, for guiding this project.</p>
+    </section>
   </div>
 
   <script src="lib/mammoth.browser.min.js"></script>
