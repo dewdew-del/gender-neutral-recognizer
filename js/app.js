@@ -40,6 +40,7 @@
       if (seg.term) {
         const mark = el('mark', seg.text);
         mark.title = 'Suggestion: ' + seg.suggestion;
+        mark.dataset.suggestion = seg.suggestion;
         preview.appendChild(mark);
       } else {
         preview.appendChild(document.createTextNode(seg.text));

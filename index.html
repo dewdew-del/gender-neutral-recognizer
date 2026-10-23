@@ -7,22 +7,22 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Gender Neutral Language Recognizer</h1>
-    <p>Upload a .txt, .docx, or .pdf file. A finite automaton finds gender-specific terms and suggests neutral alternatives. Your text is never changed.</p>
-  </header>
-
   <main>
-    <nav class="jump">
-      <a href="#results-section">Results</a>
-      <a href="#preview-section">Preview</a>
-      <a href="#automaton" id="jump-automaton">Automaton</a>
-    </nav>
+    <header>
+      <p class="kicker">Automata &amp; Language Theory</p>
+      <h1>Gender-neutral <em>language</em> recognizer</h1>
+      <p class="lede">A finite automaton reads your document and marks gender-specific words in red, with a neutral alternative in the margin. Nothing is rewritten.</p>
+      <nav class="jump">
+        <a href="#results-section">Results</a>
+        <a href="#preview-section">Marked text</a>
+        <a href="#automaton" id="jump-automaton">The automaton</a>
+      </nav>
+    </header>
 
     <section class="picker">
       <label for="file-input" id="drop-zone" class="drop-zone">
-        <strong>Choose a file or drop it here</strong>
-        <span>.txt, .docx, or .pdf &middot; try the files in the samples folder</span>
+        <span class="dz-main">Drop a document here, or <u>choose a file</u> &rarr;</span>
+        <span class="dz-hint">.txt &middot; .docx &middot; .pdf &mdash; samples are in the samples folder</span>
         <span id="file-name"></span>
       </label>
       <input type="file" id="file-input" accept=".txt,.docx,.pdf">
@@ -31,12 +31,12 @@
     <div id="message" hidden></div>
 
     <section id="results-section" hidden>
-      <h2>Results</h2>
+      <h2><span class="num">01</span> Findings</h2>
       <p id="results-summary" class="summary-strip"></p>
       <div class="table-wrap">
       <table id="results">
         <thead>
-          <tr><th>#</th><th>Gender-specific term</th><th>Occurrences</th><th>Suggested alternative</th></tr>
+          <tr><th>#</th><th>Term</th><th>Count</th><th>Suggest instead</th></tr>
         </thead>
         <tbody id="results-body"></tbody>
         <tfoot id="results-total"></tfoot>
@@ -45,15 +45,15 @@
     </section>
 
     <section id="preview-section" hidden>
-      <h2>Document preview</h2>
+      <h2><span class="num">02</span> Marked text</h2>
       <pre id="preview"></pre>
     </section>
 
     <details id="automaton">
-      <summary>Automaton</summary>
+      <summary><span class="num">03</span> The automaton</summary>
       <p id="fsa-summary"></p>
-      <h3>Trace a word or phrase</h3>
-      <input type="text" id="trace-input" value="fireman" autocomplete="off" spellcheck="false">
+      <h3>Trace a word</h3>
+      <input type="text" id="trace-input" value="fireman" autocomplete="off" spellcheck="false" aria-label="Word or phrase to trace">
       <div id="trace-output"></div>
       <h3>Transition table</h3>
       <div id="transition-table"></div>
