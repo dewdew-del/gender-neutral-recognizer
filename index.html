@@ -62,8 +62,8 @@
     </div>
 
 
-    <section id="automaton-section" class="panel fsa">
-      <h2>The automaton behind it</h2>
+    <details id="automaton-section" class="panel fsa">
+      <summary>The automaton behind it <span class="hint-s">tap to open or close</span></summary>
       <p class="fsa-lead">Every word in your document is checked by a <b>deterministic finite automaton (DFA)</b>: a small machine that reads one letter at a time and moves between states. If it ends in an accepting state, the word is one of the 24 terms.</p>
 
       <div id="doc-fsa" hidden>
@@ -103,7 +103,7 @@
 
       <h3>Full transition table</h3>
       <div id="transition-table"></div>
-    </section>
+    </details>
 
     <footer class="foot">
       <p>Final project &middot; Automata and Language Theory &middot; BSCS 3B</p>

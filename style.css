@@ -249,3 +249,11 @@ mark::after { background: color-mix(in srgb, var(--accent) 34%, var(--panel)); c
 .pill:hover { border-color: var(--text); }
 .pill.good { background: color-mix(in srgb, var(--accent) 30%, var(--panel)); }
 .pill.warn { border-style: dashed; border-color: var(--bad); }
+
+/* Collapsible automaton section */
+.fsa > summary { cursor: pointer; font-size: 1.3rem; font-weight: 600; list-style: none; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.fsa > summary::-webkit-details-marker { display: none; }
+.fsa > summary::after { content: "+"; margin-left: auto; font-family: var(--mono); color: var(--muted); }
+.fsa[open] > summary::after { content: "–"; }
+.fsa > summary .hint-s { font-size: .8rem; font-weight: 400; color: var(--muted); }
+.fsa[open] > summary { margin-bottom: 12px; }

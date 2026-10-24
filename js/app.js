@@ -259,9 +259,10 @@
     closeFloats();
     $('trace-input').value = term;
     renderTrace();
+    $('automaton-section').open = true;
     $('automaton-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-  $('goto-automaton').addEventListener('click', (e) => { e.preventDefault(); closeFloats(); $('automaton-section').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  $('goto-automaton').addEventListener('click', (e) => { e.preventDefault(); closeFloats(); $('automaton-section').open = true; $('automaton-section').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
   document.querySelectorAll('[data-open]').forEach(btn => btn.addEventListener('click', () => {
     const target = $('float-' + btn.dataset.open);
     const wasOpen = !target.hidden;
@@ -285,7 +286,7 @@
     chatLog.scrollTop = chatLog.scrollHeight;
     return m;
   }
-  addMsg('bot', 'Hi! Ask me how the recognizer works, what a DFA is, or why gender-neutral wording matters.');
+  addMsg('bot', 'Hi! I can explain how this works, what a DFA is, or why neutral wording matters. Ask me anything, even the silly stuff.');
 
 
   async function ask(question) {
@@ -296,8 +297,9 @@
     const thinking = addMsg('bot', '…');
     try {
       const reply = await Assistant.askProxy({ question, history });
-      thinking.textContent = reply;
-      history.push({ role: 'user', content: question }, { role: 'assistant', content: reply });
+      const clean = String(reply).replace(/\*\*|__|`/g, '');
+      thinking.textContent = clean;
+      history.push({ role: 'user', content: question }, { role: 'assistant', content: clean });
     } catch (err) {
       thinking.remove();
       if (err.code === 'NO_PROXY') {
