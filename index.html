@@ -60,22 +60,29 @@
         <pre id="preview"></pre>
         <div class="cta" id="cta">
           <span>Want a clean version of this file?</span>
-          <button type="button" id="open-editor" class="primary-big">Edit and download a corrected copy &darr;</button>
+          <div class="cta-btns">
+            <button type="button" id="cta-download" class="primary-big">Download corrected .txt &darr;</button>
+            <button type="button" id="open-editor" class="outline-big">Edit first</button>
+          </div>
         </div>
       </section>
     </div>
 
-    <section id="editor-section" class="panel" hidden>
-      <h2>Corrected copy</h2>
-      <p class="fsa-note">We filled in the first suggestion for every flagged word, keeping capital letters. Edit anything you like, then download it. Your original file is never changed. Read it through, because words like &ldquo;they&rdquo; can change the verb (&ldquo;he runs&rdquo; becomes &ldquo;they run&rdquo;).</p>
+    <dialog id="editor-dialog" aria-labelledby="editor-title">
+      <div class="dlg-head">
+        <h2 id="editor-title">Edit your corrected copy</h2>
+        <button type="button" class="x" id="close-editor" aria-label="Close">&times;</button>
+      </div>
+      <p class="fsa-note">We filled in the first suggestion for every flagged word, keeping capital letters. Change anything you like, then download it. Your original file is never changed. Read it through, because words like &ldquo;they&rdquo; can change the verb (&ldquo;he runs&rdquo; becomes &ldquo;they run&rdquo;).</p>
       <textarea id="editor" spellcheck="true" aria-label="Corrected text, editable"></textarea>
       <div class="act-row">
         <button type="button" id="dl-txt" class="primary-big">Download as .txt &darr;</button>
         <button type="button" id="copy-text" class="act">Copy text</button>
         <button type="button" id="reset-editor" class="act">Reset to suggestions</button>
+        <button type="button" id="done-editor" class="act">Done</button>
         <span id="editor-status" class="fsa-note" role="status"></span>
       </div>
-    </section>
+    </dialog>
 
 
     <details id="automaton-section" class="panel fsa">
