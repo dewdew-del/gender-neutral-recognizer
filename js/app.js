@@ -116,6 +116,7 @@
   function clearOutput() {
     editorSection.hidden = true;
     openEditorBtn.hidden = true;
+    $('cta').hidden = true;
     $('doc-fsa').hidden = true;
     $('trace-title').textContent = 'Try a word or phrase';
     message.hidden = true;
@@ -389,6 +390,7 @@
       showPreview(text, matches);
       docText = text; docMatches = matches; docName = file.name;
       openEditorBtn.hidden = matches.length === 0;
+      $('cta').hidden = matches.length === 0;
     } catch (err) {
       showMessage('error', err.message);
     }
