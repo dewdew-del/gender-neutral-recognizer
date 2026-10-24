@@ -99,3 +99,24 @@ test('transitionRows lists every state once', () => {
   assert.strictEqual(rows.filter(r => r.accepting).length, 24);
   assert.ok(rows[0].transitions.some(([s]) => s === 'h'));
 });
+
+test('analyze counts words and reports near misses that are not whole words', () => {
+  const text = 'He said hello to the herself-less shell';
+  const a = FSA.analyze(dfa, text);
+  assert.strictEqual(a.chars, text.length);
+  assert.strictEqual(a.words, 8);
+  assert.deepStrictEqual(a.matches, FSA.scan(dfa, text));
+  // "hello" reaches the accepting state of "he" and "shell" that of "she", but neither is a whole word; "the" never does
+  const miss = a.nearMisses.map(m => text.slice(m.start, m.end) + '|' + TERMS[m.termIndex].term);
+  assert.deepStrictEqual(miss, ['he|he', 'she|she']);
+});
+
+test('analyze ignores near misses hidden by a longer match', () => {
+  const a = FSA.analyze(dfa, 'herself');
+  assert.strictEqual(a.matches.length, 1);
+  assert.deepStrictEqual(a.nearMisses, []);
+});
+
+test('analyze of empty text', () => {
+  assert.deepStrictEqual(FSA.analyze(dfa, ''), { chars: 0, words: 0, matches: [], nearMisses: [] });
+});

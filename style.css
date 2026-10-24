@@ -238,3 +238,14 @@ mark::after { background: color-mix(in srgb, var(--accent) 34%, var(--panel)); c
 @media (prefers-reduced-motion: reduce) { .diagram .st, .diagram .ar { animation: none; opacity: 1; } }
 .steps-table { margin-top: 8px; max-width: 420px; }
 .steps-table th, .steps-table td { font-family: var(--mono); font-size: .8rem; padding: 4px 10px 4px 0; }
+
+/* Document-through-automaton panel */
+.fsa h4 { font-size: .85rem; font-weight: 600; margin: 16px 0 8px; }
+.fsa h4 .sub { font-weight: 400; color: var(--muted); }
+#doc-stats { margin-bottom: 10px; flex-wrap: wrap; }
+#doc-stats div { min-width: 120px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; font-size: .85rem; color: var(--muted); align-items: center; }
+.pill { font: inherit; font-size: .85rem; border: 1px solid var(--line); background: var(--bg); color: var(--text); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+.pill:hover { border-color: var(--text); }
+.pill.good { background: color-mix(in srgb, var(--accent) 30%, var(--panel)); }
+.pill.warn { border-style: dashed; border-color: var(--bad); }

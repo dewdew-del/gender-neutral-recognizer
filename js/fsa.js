@@ -65,6 +65,44 @@
     return matches;
   }
 
+  // Same walk as scan(), but also reports how much work the automaton did and the
+  // "near misses": an accepting state was reached but the word was not a whole word.
+  function analyze(dfa, text) {
+    const matches = [];
+    const nearMisses = [];
+    let words = 0;
+    let i = 0;
+    while (i < text.length) {
+      const wordStart = i === 0 || !isWordChar(text[i - 1]);
+      if (wordStart) {
+        if (isWordChar(text[i])) words++;
+        let state = dfa.start;
+        let best = null;
+        let near = null;
+        let j = i;
+        while (j < text.length) {
+          const s = sym(text[j]);
+          const next = s === null ? undefined : dfa.delta[state][s];
+          if (next === undefined) break;
+          state = next;
+          j++;
+          if (dfa.accept[state] !== undefined) {
+            if (j === text.length || !isWordChar(text[j])) best = { termIndex: dfa.accept[state], start: i, end: j };
+            else near = { termIndex: dfa.accept[state], start: i, end: j };
+          }
+        }
+        if (best) {
+          matches.push(best);
+          i = best.end;
+          continue;
+        }
+        if (near) nearMisses.push(near);
+      }
+      i++;
+    }
+    return { chars: text.length, words, matches, nearMisses };
+  }
+
   function summarize(matches, terms) {
     const byIndex = new Map();
     for (const m of matches) {
@@ -111,5 +149,5 @@
     });
   }
 
-  return { sym, isWordChar, buildDFA, scan, summarize, trace, transitionRows };
+  return { sym, isWordChar, buildDFA, scan, analyze, summarize, trace, transitionRows };
 });

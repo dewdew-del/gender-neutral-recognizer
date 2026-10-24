@@ -66,6 +66,21 @@
       <h2>The automaton behind it</h2>
       <p class="fsa-lead">Every word in your document is checked by a <b>deterministic finite automaton (DFA)</b>: a small machine that reads one letter at a time and moves between states. If it ends in an accepting state, the word is one of the 24 terms.</p>
 
+      <div id="doc-fsa" hidden>
+        <h3>Your document through the automaton</h3>
+        <div class="stats" id="doc-stats">
+          <div><b id="ds-chars">0</b><span>letters read</span></div>
+          <div><b id="ds-words">0</b><span>words checked</span></div>
+          <div><b id="ds-match">0</b><span>accepted</span></div>
+          <div><b id="ds-miss">0</b><span>rejected near misses</span></div>
+        </div>
+        <p class="fsa-note" id="doc-note"></p>
+        <h4>Accepted: the machine ended in an accepting state at a word boundary <span class="sub">(click one to see its path)</span></h4>
+        <div id="doc-matches" class="chips"></div>
+        <h4>Rejected: an accepting state was reached, but the word kept going</h4>
+        <div id="doc-misses" class="chips"></div>
+      </div>
+
       <h3>Formal definition</h3>
       <div class="table-wrap"><table class="formal" id="fsa-formal"></table></div>
 

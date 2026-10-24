@@ -24,7 +24,49 @@
     message.hidden = false;
   }
 
+  // "Your document through the automaton": what the machine did with the uploaded text
+  function pill(text, onClick, cls) {
+    const b = el('button', text);
+    b.type = 'button';
+    b.className = 'pill' + (cls ? ' ' + cls : '');
+    if (onClick) b.addEventListener('click', onClick); else b.disabled = true;
+    return b;
+  }
+  function showDocAutomaton(text, analysis) {
+    const box = $('doc-fsa');
+    const tidy = (s) => s.replace(/\s+/g, ' ');
+    $('ds-chars').textContent = String(analysis.chars);
+    $('ds-words').textContent = String(analysis.words);
+    $('ds-match').textContent = String(analysis.matches.length);
+    $('ds-miss').textContent = String(analysis.nearMisses.length);
+    $('doc-note').textContent = 'The machine restarted at q0 at the beginning of each of the ' + analysis.words +
+      ' words and followed one arrow per letter. A word whose letters have no arrow stops at the dead state ∅.';
+    const ok = $('doc-matches');
+    ok.textContent = '';
+    analysis.matches.slice(0, 60).forEach((m) => {
+      const word = text.slice(m.start, m.end);
+      ok.appendChild(pill(tidy(word) + ' → ' + TERMS[m.termIndex].suggestion, () => showTrace(tidy(word)), 'good'));
+    });
+    if (analysis.matches.length > 60) ok.appendChild(el('span', '… and ' + (analysis.matches.length - 60) + ' more'));
+    if (!analysis.matches.length) ok.appendChild(el('span', 'None in this document.'));
+    const bad = $('doc-misses');
+    bad.textContent = '';
+    const seen = new Set();
+    for (const m of analysis.nearMisses) {
+      let end = m.end;
+      while (end < text.length && /[\p{L}\p{N}]/u.test(text[end])) end++;
+      const full = text.slice(m.start, end);
+      const key = full.toLowerCase();
+      if (seen.has(key) || seen.size >= 20) continue;
+      seen.add(key);
+      bad.appendChild(pill('"' + full + '" reached "' + TERMS[m.termIndex].term + '" but is longer', () => showTrace(tidy(text.slice(m.start, m.end))), 'warn'));
+    }
+    if (!analysis.nearMisses.length) bad.appendChild(el('span', 'No near misses in this document.'));
+    box.hidden = false;
+  }
+
   function clearOutput() {
+    $('doc-fsa').hidden = true;
     message.hidden = true;
     message.textContent = '';
     resultsSection.hidden = true;
@@ -283,7 +325,9 @@
     fileName.textContent = file.name;
     try {
       const text = await DocReader.readFile(file);
-      const matches = FSA.scan(dfa, text);
+      const analysis = FSA.analyze(dfa, text);
+      const matches = analysis.matches;
+      showDocAutomaton(text, analysis);
       if (matches.length === 0) {
         showMessage('info', DocReader.MESSAGES.NO_TERMS);
       } else {
