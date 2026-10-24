@@ -38,7 +38,7 @@
         res = await doFetch(URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
-          body: JSON.stringify({ model, messages, temperature: 0.3, max_tokens: 400 }),
+          body: JSON.stringify(Object.assign({ model, messages, temperature: 0.4, max_tokens: 700 }, model.startsWith('openai/gpt-oss') ? { reasoning_effort: 'low' } : {})),
         });
       } catch (err) {
         throw new Error('Could not reach Groq. Check your internet connection.');
@@ -53,7 +53,9 @@
         throw err;
       }
       const data = await res.json();
-      return data.choices[0].message.content.trim();
+      const text = String((data.choices[0].message || {}).content || '').trim();
+      if (!text) { lastErr = new Error('Groq could not answer right now. Please try again.'); continue; }
+      return text;
     }
     throw lastErr;
   }

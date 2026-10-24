@@ -96,3 +96,18 @@ test('askGroq falls back to the next model when one is unavailable (404)', async
   assert.strictEqual(tried.length, 2);
   assert.notStrictEqual(tried[0], tried[1]);
 });
+
+test('askGroq skips a model that answers with empty text, and keeps reasoning short for gpt-oss', async () => {
+  const bodies = [];
+  const fetchImpl = async (url, opts) => {
+    const body = JSON.parse(opts.body);
+    bodies.push(body);
+    const content = bodies.length === 1 ? '' : 'real answer';
+    return { ok: true, status: 200, json: async () => ({ choices: [{ message: { content } }] }) };
+  };
+  assert.strictEqual(await askGroq({ key: 'k', messages: [], fetchImpl }), 'real answer');
+  assert.strictEqual(bodies.length, 2);
+  const oss = bodies.find(b => b.model.startsWith('openai/gpt-oss'));
+  if (oss) assert.strictEqual(oss.reasoning_effort, 'low');
+  assert.ok(bodies.every(b => b.max_tokens >= 600));
+});
