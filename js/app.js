@@ -63,10 +63,22 @@
     }
     if (!analysis.nearMisses.length) bad.appendChild(el('span', 'No near misses in this document.'));
     box.hidden = false;
+
+    // Trace panel starts from the uploaded document instead of the default example
+    let first = null, why = '';
+    if (analysis.matches.length) { const m = analysis.matches[0]; first = tidy(text.slice(m.start, m.end)); why = 'the first term found in your document'; }
+    else if (analysis.nearMisses.length) { const m = analysis.nearMisses[0]; first = tidy(text.slice(m.start, m.end)); why = 'the first near miss in your document'; }
+    else { const w = text.match(/[p{L}p{N}]+/u); if (w) { first = w[0]; why = 'the first word of your document'; } }
+    if (first) {
+      $('trace-input').value = first;
+      $('trace-title').textContent = 'Path through the automaton for ' + why;
+      renderTrace();
+    }
   }
 
   function clearOutput() {
     $('doc-fsa').hidden = true;
+    $('trace-title').textContent = 'Try a word or phrase';
     message.hidden = true;
     message.textContent = '';
     resultsSection.hidden = true;
