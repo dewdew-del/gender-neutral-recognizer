@@ -58,8 +58,21 @@
       <section id="preview-section" class="panel" hidden>
         <h2>Your text</h2>
         <pre id="preview"></pre>
+        <button type="button" id="open-editor" class="act">Edit and download a corrected copy</button>
       </section>
     </div>
+
+    <section id="editor-section" class="panel" hidden>
+      <h2>Corrected copy</h2>
+      <p class="fsa-note">We filled in the first suggestion for every flagged word, keeping capital letters. Edit anything you like, then download it. Your original file is never changed. Read it through, because words like &ldquo;they&rdquo; can change the verb (&ldquo;he runs&rdquo; becomes &ldquo;they run&rdquo;).</p>
+      <textarea id="editor" spellcheck="true" aria-label="Corrected text, editable"></textarea>
+      <div class="act-row">
+        <button type="button" id="dl-txt" class="primary">Download as .txt</button>
+        <button type="button" id="copy-text" class="act">Copy text</button>
+        <button type="button" id="reset-editor" class="act">Reset to suggestions</button>
+        <span id="editor-status" class="fsa-note" role="status"></span>
+      </div>
+    </section>
 
 
     <details id="automaton-section" class="panel fsa">

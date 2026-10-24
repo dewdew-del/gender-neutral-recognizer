@@ -17,5 +17,25 @@
     return segments;
   }
 
-  return { toSegments };
+  // Build a corrected copy: each match is replaced by its first suggested alternative,
+  // keeping the original capitalization (he -> they, He -> They, HE -> THEY).
+  function matchCase(original, replacement) {
+    const letters = original.replace(/[^\p{L}]/gu, '');
+    if (letters.length > 1 && letters === letters.toUpperCase()) return replacement.toUpperCase();
+    if (/^\p{Lu}/u.test(original)) return replacement.charAt(0).toUpperCase() + replacement.slice(1);
+    return replacement;
+  }
+  function applySuggestions(text, matches, terms) {
+    let out = '';
+    let pos = 0;
+    for (const m of matches) {
+      out += text.slice(pos, m.start);
+      const first = terms[m.termIndex].suggestion.split('/')[0].trim();
+      out += matchCase(text.slice(m.start, m.end), first);
+      pos = m.end;
+    }
+    return out + text.slice(pos);
+  }
+
+  return { toSegments, applySuggestions };
 });

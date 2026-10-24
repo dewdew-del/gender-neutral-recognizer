@@ -257,3 +257,14 @@ mark::after { background: color-mix(in srgb, var(--accent) 34%, var(--panel)); c
 .fsa[open] > summary::after { content: "–"; }
 .fsa > summary .hint-s { font-size: .8rem; font-weight: 400; color: var(--muted); }
 .fsa[open] > summary { margin-bottom: 12px; }
+
+/* Corrected copy editor */
+#editor { width: 100%; min-height: 260px; resize: vertical; font: inherit; font-size: .98rem; line-height: 1.7; padding: 14px 16px; border: 1.5px solid var(--line); border-radius: 14px; background: var(--bg); color: var(--text); }
+#editor:focus { outline: none; border-color: var(--text); }
+.act { font: inherit; font-size: .88rem; font-weight: 600; cursor: pointer; border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 999px; padding: 9px 16px; }
+.act:hover { border-color: var(--text); }
+#open-editor { margin-top: 14px; }
+.act-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+.act-row .primary { font: inherit; font-size: .88rem; font-weight: 600; cursor: pointer; border-radius: 999px; padding: 9px 18px; border: 1px solid var(--text); }
+#editor-section { margin-bottom: 16px; }
+#editor-section[hidden] { display: none; }

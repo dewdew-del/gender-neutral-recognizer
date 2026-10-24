@@ -17,3 +17,18 @@ test('no matches gives one segment, empty text gives none', () => {
   assert.deepStrictEqual(toSegments('neutral', [], TERMS), [{ text: 'neutral' }]);
   assert.deepStrictEqual(toSegments('', [], TERMS), []);
 });
+
+const { applySuggestions } = require('../js/render.js');
+
+test('applySuggestions replaces matches and keeps capitalization', () => {
+  const text = 'He met the chairman. CHAIRMAN left. Policeman came.';
+  const out = applySuggestions(text, FSA.scan(dfa, text), TERMS);
+  assert.strictEqual(out, 'They met the chairperson. CHAIRPERSON left. Police officer came.');
+});
+test('applySuggestions picks the first alternative and leaves other text alone', () => {
+  const text = 'Tell her: the theme is hers.\r\nOK';
+  const out = applySuggestions(text, FSA.scan(dfa, text), TERMS);
+  assert.strictEqual(out, 'Tell them: the theme is theirs.\r\nOK');
+  assert.strictEqual(applySuggestions('nothing here', [], TERMS), 'nothing here');
+  assert.strictEqual(applySuggestions('', [], TERMS), '');
+});

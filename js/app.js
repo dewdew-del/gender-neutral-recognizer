@@ -82,7 +82,40 @@
     }
   }
 
+  // Editable corrected copy (the original file is never changed)
+  let docText = '', docMatches = [], docName = 'document';
+  const editorSection = $('editor-section');
+  const editor = $('editor');
+  const editorStatus = $('editor-status');
+  const openEditorBtn = $('open-editor');
+  function fillEditor() { editor.value = Render.applySuggestions(docText, docMatches, TERMS); }
+  function say(msg) { editorStatus.textContent = msg; setTimeout(() => { if (editorStatus.textContent === msg) editorStatus.textContent = ''; }, 3000); }
+  openEditorBtn.addEventListener('click', () => {
+    fillEditor();
+    editorSection.hidden = false;
+    editorSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    editor.focus();
+  });
+  $('reset-editor').addEventListener('click', () => { fillEditor(); say('Reset to the suggestions.'); });
+  $('copy-text').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(editor.value); say('Copied.'); } catch (e) { editor.select(); say('Press Ctrl+C to copy.'); }
+  });
+  $('dl-txt').addEventListener('click', () => {
+    const blob = new Blob([editor.value], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = docName.replace(/\.[^.]*$/, '') + '-corrected.txt';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    say('Downloaded ' + a.download);
+  });
+
   function clearOutput() {
+    editorSection.hidden = true;
+    openEditorBtn.hidden = true;
     $('doc-fsa').hidden = true;
     $('trace-title').textContent = 'Try a word or phrase';
     message.hidden = true;
@@ -354,6 +387,8 @@
         showResults(FSA.summarize(matches, TERMS));
       }
       showPreview(text, matches);
+      docText = text; docMatches = matches; docName = file.name;
+      openEditorBtn.hidden = matches.length === 0;
     } catch (err) {
       showMessage('error', err.message);
     }
