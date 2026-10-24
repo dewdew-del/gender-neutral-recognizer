@@ -32,6 +32,12 @@
     if (onClick) b.addEventListener('click', onClick); else b.disabled = true;
     return b;
   }
+  // the whole word around a near miss, e.g. "shell" for the accepting state of "she"
+  function fullWord(text, m) {
+    let end = m.end;
+    while (end < text.length && /[p{L}p{N}]/u.test(text[end])) end++;
+    return text.slice(m.start, end);
+  }
   function showDocAutomaton(text, analysis) {
     const box = $('doc-fsa');
     const tidy = (s) => s.replace(/\s+/g, ' ');
@@ -59,7 +65,7 @@
       const key = full.toLowerCase();
       if (seen.has(key) || seen.size >= 20) continue;
       seen.add(key);
-      bad.appendChild(pill('"' + full + '" reached "' + TERMS[m.termIndex].term + '" but is longer', () => showTrace(tidy(text.slice(m.start, m.end))), 'warn'));
+      bad.appendChild(pill('"' + full + '" reached "' + TERMS[m.termIndex].term + '" but is longer', () => showTrace(tidy(full)), 'warn'));
     }
     if (!analysis.nearMisses.length) bad.appendChild(el('span', 'No near misses in this document.'));
     box.hidden = false;
@@ -67,7 +73,7 @@
     // Trace panel starts from the uploaded document instead of the default example
     let first = null, why = '';
     if (analysis.matches.length) { const m = analysis.matches[0]; first = tidy(text.slice(m.start, m.end)); why = 'the first term found in your document'; }
-    else if (analysis.nearMisses.length) { const m = analysis.nearMisses[0]; first = tidy(text.slice(m.start, m.end)); why = 'the first near miss in your document'; }
+    else if (analysis.nearMisses.length) { const m = analysis.nearMisses[0]; first = tidy(fullWord(text, m)); why = 'the first near miss in your document'; }
     else { const w = text.match(/[p{L}p{N}]+/u); if (w) { first = w[0]; why = 'the first word of your document'; } }
     if (first) {
       $('trace-input').value = first;
