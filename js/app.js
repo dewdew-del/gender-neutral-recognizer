@@ -80,8 +80,7 @@
   function renderAutomatonPanel() {
     const rows = FSA.transitionRows(dfa, TERMS);
     const accepting = rows.filter(r => r.accepting).length;
-    $('fsa-summary').textContent = dfa.states + ' states · ' + accepting + ' accepting states · Σ = {a–z, ␣}. ' +
-      'Any missing transition goes to an implicit dead state; states entered on ␣ loop on ␣ so phrases match across extra spaces and line breaks.';
+    $('fsa-summary').textContent = 'Type any word. Watch it move through the states: a double ring at the end means accepted, ∅ means rejected. The ' + accepting + ' accepting states are the 24 terms.';
 
     const table = el('table');
     const head = el('tr');
@@ -99,12 +98,63 @@
     $('transition-table').appendChild(table);
   }
 
+  function renderFormal() {
+    const rows = FSA.transitionRows(dfa, TERMS);
+    const edges = rows.reduce((n, r) => n + r.transitions.length, 0);
+    const t = $('fsa-formal');
+    t.textContent = '';
+    [
+      ['M', '(Q, Σ, δ, q0, F)'],
+      ['Q', 'a set of ' + dfa.states + ' states, q0 … q' + (dfa.states - 1) + ', plus an implicit dead state ∅'],
+      ['Σ', '{ a, b, …, z, ␣ }, the 26 lowercase letters and the space symbol'],
+      ['δ', 'the transition function, ' + edges + ' arrows q —symbol→ q′; any missing arrow goes to ∅'],
+      ['q0', 'the start state'],
+      ['F', 'the ' + rows.filter(r => r.accepting).length + ' accepting states, one for each of the 24 terms'],
+    ].forEach(([k, v]) => { const tr = el('tr'); tr.appendChild(el('th', k)); tr.appendChild(el('td', v)); t.appendChild(tr); });
+  }
+
+  function renderDiagram(word, t) {
+    const box = $('fsa-diagram');
+    box.textContent = '';
+    if (word === '') return;
+    const show = (s) => (s === ' ' ? '␣' : s);
+    const state = (label, cls, i) => { const s = el('span', label); s.className = 'st ' + cls; s.style.animationDelay = (i * 0.12) + 's'; return s; };
+    const arrow = (sym, i) => { const s = el('span', show(sym) + ' →'); s.className = 'ar'; s.style.animationDelay = (i * 0.12 - 0.06) + 's'; return s; };
+    let i = 0;
+    box.appendChild(state('q0', 'start', i++));
+    t.path.forEach((step, k) => {
+      box.appendChild(arrow(step.symbol, i));
+      const isLast = k === t.path.length - 1;
+      if (step.to === null) box.appendChild(state('∅', 'dead', i++));
+      else box.appendChild(state(q(step.to), isLast ? (t.accepted ? 'accept' : 'stop') : '', i++));
+    });
+  }
+
+  function renderSteps(t) {
+    const tb = $('fsa-steps');
+    tb.textContent = '';
+    if (!t.path.length) return;
+    const head = el('tr');
+    ['Step', 'From', 'Reads', 'To'].forEach(x => head.appendChild(el('th', x)));
+    tb.appendChild(head);
+    t.path.forEach((s, k) => {
+      const tr = el('tr');
+      tr.appendChild(el('td', String(k + 1)));
+      tr.appendChild(el('td', q(s.from)));
+      tr.appendChild(el('td', s.symbol === ' ' ? '␣' : s.symbol));
+      tr.appendChild(el('td', s.to === null ? '∅ (dead)' : q(s.to)));
+      tb.appendChild(tr);
+    });
+  }
+
   function renderTrace() {
     const out = $('trace-output');
     out.textContent = '';
     const word = $('trace-input').value;
-    if (word === '') return;
+    if (word === '') { $('fsa-diagram').textContent = ''; $('fsa-steps').textContent = ''; return; }
     const t = FSA.trace(dfa, word);
+    renderDiagram(word, t);
+    renderSteps(t);
     const show = (s) => (s === ' ' ? '␣' : s);
     let line = 'q0';
     for (const step of t.path) {
@@ -128,6 +178,7 @@
   }
 
   renderAutomatonPanel();
+  renderFormal();
   $('trace-input').addEventListener('input', renderTrace);
   renderTrace();
 
@@ -164,12 +215,11 @@
   // Open "How it works" with the automaton trace of the clicked term
   function showTrace(term) {
     closeFloats();
-    $('float-how').hidden = false;
-    $('automaton').open = true;
     $('trace-input').value = term;
     renderTrace();
-    $('trace-output').scrollIntoView({ block: 'nearest' });
+    $('automaton-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+  $('goto-automaton').addEventListener('click', (e) => { e.preventDefault(); closeFloats(); $('automaton-section').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
   document.querySelectorAll('[data-open]').forEach(btn => btn.addEventListener('click', () => {
     const target = $('float-' + btn.dataset.open);
     const wasOpen = !target.hidden;

@@ -62,6 +62,34 @@
     </div>
 
 
+    <section id="automaton-section" class="panel fsa">
+      <h2>The automaton behind it</h2>
+      <p class="fsa-lead">Every word in your document is checked by a <b>deterministic finite automaton (DFA)</b>: a small machine that reads one letter at a time and moves between states. If it ends in an accepting state, the word is one of the 24 terms.</p>
+
+      <h3>Formal definition</h3>
+      <div class="table-wrap"><table class="formal" id="fsa-formal"></table></div>
+
+      <h3>How the machine decides</h3>
+      <div class="rules">
+        <div><b>Start</b><span>Always at q0. Each letter, turned to lowercase, follows one arrow.</span></div>
+        <div><b>Accepting states</b><span>A state with a double ring means a term ends here, so the word is a match.</span></div>
+        <div><b>Dead state &empty;</b><span>No arrow for the letter? The machine falls into &empty; and the word is rejected.</span></div>
+        <div><b>Whole words</b><span>A match only counts at a word start and before a non-letter, so &ldquo;he&rdquo; is not found in &ldquo;the&rdquo;.</span></div>
+        <div><b>Longest match</b><span>It keeps reading after an accept, so &ldquo;herself&rdquo; wins over &ldquo;her&rdquo; and &ldquo;he&rdquo;.</span></div>
+        <div><b>Phrases</b><span>After a space the machine loops on the space symbol, so &ldquo;cleaning&nbsp;&nbsp;lady&rdquo; and line breaks still match.</span></div>
+      </div>
+
+      <h3>Try a word or phrase</h3>
+      <p class="fsa-note" id="fsa-summary"></p>
+      <input type="text" id="trace-input" value="fireman" autocomplete="off" spellcheck="false" aria-label="Word or phrase to trace">
+      <div id="fsa-diagram" class="diagram" aria-live="polite"></div>
+      <div id="trace-output"></div>
+      <div class="table-wrap"><table id="fsa-steps" class="steps-table"></table></div>
+
+      <h3>Full transition table</h3>
+      <div id="transition-table"></div>
+    </section>
+
     <footer class="foot">
       <p>Final project &middot; Automata and Language Theory &middot; BSCS 3B</p>
       <p>Instructor: Alma Mae B. Auxtero</p>
@@ -78,15 +106,7 @@
         <li><b>Report.</b> Each hit is counted, highlighted in your text, and paired with a neutral suggestion. Nothing is rewritten.</li>
       </ol>
       <p class="built"><b>Built with</b> HTML, CSS and JavaScript (no framework). Matching uses a hand-built DFA, not regular expressions.</p>
-    <details id="automaton">
-      <summary>How the automaton sees it</summary>
-      <p id="fsa-summary"></p>
-      <h3>Try a word</h3>
-      <input type="text" id="trace-input" value="fireman" autocomplete="off" spellcheck="false" aria-label="Word or phrase to trace">
-      <div id="trace-output"></div>
-      <h3>Transition table</h3>
-      <div id="transition-table"></div>
-    </details>
+    <p class="built"><a href="#automaton-section" id="goto-automaton">See the automaton in detail &darr;</a></p>
     
 
   </aside>
