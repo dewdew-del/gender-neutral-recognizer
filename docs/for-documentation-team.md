@@ -1,6 +1,7 @@
 # For the documentation team
 
-Material for **document section 2** (design / approach). **Live link for section 3:** https://gender-neutral-recognizer.vercel.app
+Material for **document section 2** (design / approach). **Live link for section 3:** https://gender-neutral-recognizer.vercel.app  
+**Source code (GitHub, public):** https://github.com/dewdew-del/gender-neutral-recognizer
 
 ## Language and tools
 

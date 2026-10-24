@@ -2,7 +2,8 @@
 
 A static web page that reads a `.txt`, `.docx`, or `.pdf` file and finds 24 predefined gender-specific words and phrases (for example "chairman", "fireman", "he", "cleaning lady") using a hand-built deterministic finite automaton (DFA). It shows a results table (term, occurrences, suggested neutral alternative), a highlighted preview, and an Automaton panel with a live trace and the full transition table. The text is never changed; suggestions are for review only.
 
-**Live link:** https://gender-neutral-recognizer.vercel.app
+**Live link:** https://gender-neutral-recognizer.vercel.app  
+**Source code (GitHub):** https://github.com/dewdew-del/gender-neutral-recognizer
 
 ## Run locally
 
