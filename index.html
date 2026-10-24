@@ -25,7 +25,7 @@
       <p>Upload a file. A finite automaton finds the terms and suggests neutral wording. Your text is never changed.</p>
     </header>
 
-    <section class="picker">
+    <section class="picker" id="picker">
       <label for="file-input" id="drop-zone" class="drop-zone">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
         <span class="dz-main"><span class="btn">Choose file</span></span>
@@ -58,14 +58,15 @@
       <section id="preview-section" class="panel" hidden>
         <h2>Your text</h2>
         <pre id="preview"></pre>
-        <div class="cta" id="cta">
-          <span>Want a clean version of this file?</span>
-          <div class="cta-btns">
-            <button type="button" id="cta-download" class="primary-big">Download corrected .txt &darr;</button>
-            <button type="button" id="open-editor" class="outline-big">Edit first</button>
-          </div>
-        </div>
       </section>
+    </div>
+
+    <div class="cta" id="cta" hidden>
+      <span>Want a clean version of this file?</span>
+      <div class="cta-btns">
+        <button type="button" id="cta-download" class="primary-big">Download corrected .txt &darr;</button>
+        <button type="button" id="open-editor" class="outline-big">Edit first</button>
+      </div>
     </div>
 
     <dialog id="editor-dialog" aria-labelledby="editor-title">

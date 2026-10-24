@@ -2,7 +2,7 @@
   --bg: #f4f4f2;
   --panel: #ffffff;
   --text: #111111;
-  --muted: #777770;
+  --muted: #66665f;
   --line: #e4e4e0;
   --accent: #d8ff3e;      /* highlighter */
   --on-accent: #111111;
@@ -183,7 +183,7 @@ button.primary { background: var(--text); color: var(--bg); border-color: var(--
 .foot { padding-bottom: 40px; }
 
 /* Ask a question: plain yellow text link (no pill) */
-:root { --ask: #8a7a00; }
+:root { --ask: #6f6200; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ask: #d8ff3e; } }
 :root[data-theme="dark"] { --ask: #d8ff3e; }
 .topbar nav .ask-link { background: none; color: var(--ask); font-weight: 700; padding: 10px 0; margin: 0; border-radius: 0; box-shadow: none; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 6px; }
@@ -296,3 +296,17 @@ dialog::backdrop { background: rgba(10,10,10,.5); }
 dialog .x { width: 34px; height: 34px; border: 0; border-radius: 50%; background: var(--bg); color: var(--text); font-size: 1.2rem; cursor: pointer; }
 dialog #editor { min-height: 300px; }
 @media (max-width: 600px) { dialog[open] { padding: 18px; } }
+
+/* Critique fixes: full-width call-out bar, compact upload bar, mobile order, contrast, touch size */
+.cta { margin: 0 0 16px; }
+.cta-btns { flex-wrap: nowrap; }
+@media (max-width: 520px) { .cta-btns { flex-wrap: wrap; width: 100%; } .cta-btns > button { flex: 1 1 100%; } }
+.picker.has-file .drop-zone { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; min-height: 0; padding: 14px 20px; gap: 12px; border-style: solid; border-color: var(--line); }
+.picker.has-file .drop-zone svg, .picker.has-file .dz-hint { display: none; }
+.picker.has-file #file-name { margin: 0; order: -1; }
+#preview-section { order: 1; }
+#results-section { order: 2; }
+.topbar nav button { min-height: 44px; padding: 12px 0; }
+.topbar nav { gap: 0 18px; }
+@media (max-width: 520px) { .topbar nav { gap: 0 14px; } .topbar nav button { font-size: .88rem; } }
+.pill { padding: 8px 14px; }

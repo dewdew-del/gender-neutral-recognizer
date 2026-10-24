@@ -379,8 +379,10 @@
   fileInput.addEventListener('change', async () => {
     clearOutput();
     const file = fileInput.files[0];
-    if (!file) { fileName.textContent = ''; return; }
+    if (!file) { fileName.textContent = ''; $('picker').classList.remove('has-file'); document.querySelector('#drop-zone .btn').textContent = 'Choose file'; return; }
     fileName.textContent = file.name;
+    $('picker').classList.add('has-file');
+    document.querySelector('#drop-zone .btn').textContent = 'Change file';
     try {
       const text = await DocReader.readFile(file);
       const analysis = FSA.analyze(dfa, text);
