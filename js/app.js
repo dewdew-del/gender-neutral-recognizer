@@ -56,6 +56,10 @@
       tr.appendChild(el('td', row.term));
       tr.appendChild(el('td', String(row.count)));
       tr.appendChild(el('td', row.suggestion));
+      tr.tabIndex = 0;
+      tr.title = 'Click to see how the automaton recognized this term';
+      tr.addEventListener('click', () => showTrace(row.term));
+      tr.addEventListener('keydown', (e) => { if (e.key === 'Enter') showTrace(row.term); });
       resultsBody.appendChild(tr);
     });
     const total = summary.reduce((n, r) => n + r.count, 0);
@@ -157,6 +161,15 @@
   // Floating mini windows (one open at a time)
   const floats = ['how', 'why', 'team', 'ask'].map(name => $('float-' + name));
   function closeFloats() { floats.forEach(f => { f.hidden = true; }); }
+  // Open "How it works" with the automaton trace of the clicked term
+  function showTrace(term) {
+    closeFloats();
+    $('float-how').hidden = false;
+    $('automaton').open = true;
+    $('trace-input').value = term;
+    renderTrace();
+    $('trace-output').scrollIntoView({ block: 'nearest' });
+  }
   document.querySelectorAll('[data-open]').forEach(btn => btn.addEventListener('click', () => {
     const target = $('float-' + btn.dataset.open);
     const wasOpen = !target.hidden;
