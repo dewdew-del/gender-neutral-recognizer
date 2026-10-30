@@ -1,0 +1,14 @@
+HOW TO RUN - Gender Neutral Language Recognizer
+
+1. Open this link in any browser:
+   https://gender-neutral-recognizer.vercel.app
+
+2. Click the file button and choose a .txt, .docx, or .pdf file
+   (you can use the attached sample.txt).
+
+3. The results show each gender-specific term, how many times it
+   appears, and a gender-neutral suggestion.
+
+No installation is needed.
+
+Source code: https://github.com/dewdew-del/gender-neutral-recognizer
